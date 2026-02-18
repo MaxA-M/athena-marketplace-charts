@@ -390,7 +390,14 @@ function buildChart() {
   chartArea.innerHTML = svg;
 }
 
-const activeOverlays = new Set();
+const activeOverlays = new Set(['mdp', 'covid', 'cures', 'chatgpt']);
+
+// Set buttons active on load
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  if (activeOverlays.has(btn.getAttribute('data-overlay'))) {
+    btn.classList.add('active');
+  }
+});
 
 function toggleOverlay(name) {
   const btn = document.querySelector(`button[data-overlay="${name}"]`);
@@ -413,7 +420,22 @@ function toggleOverlay(name) {
 }
 
 buildChart();
-window.addEventListener('resize', buildChart);
+// Apply default active overlays after initial render
+document.querySelectorAll('.annotation-group').forEach(g => {
+  const overlay = g.getAttribute('data-overlay');
+  if (activeOverlays.has(overlay)) {
+    g.classList.add('annotation-visible');
+  }
+});
+window.addEventListener('resize', () => {
+  buildChart();
+  document.querySelectorAll('.annotation-group').forEach(g => {
+    const overlay = g.getAttribute('data-overlay');
+    if (activeOverlays.has(overlay)) {
+      g.classList.add('annotation-visible');
+    }
+  });
+});
 </script>
 </body>
 </html>
