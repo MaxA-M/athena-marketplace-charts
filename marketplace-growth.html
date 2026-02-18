@@ -244,6 +244,9 @@
     .stat-row { gap: 0.75rem; }
     .stat { padding: 0.75rem; }
     .stat-value { font-size: 1.2rem; }
+    .annotation-label, .annotation-badge { display: none !important; }
+    .bar-label { font-size: 9px; }
+    .y-axis-label { font-size: 8px; }
   }
 </style>
 </head>
@@ -349,7 +352,8 @@ function buildChart() {
     svg += `<g class="bar-group">`;
     svg += `<rect x="${x - barWidth/2}" y="${y}" width="${barWidth}" height="${barH}" class="bar" rx="3"/>`;
     svg += `<text x="${x}" y="${y - 6}" class="bar-value">${d.count}</text>`;
-    svg += `<text x="${x}" y="${H - padding.bottom + 18}" class="bar-label">${d.year}</text>`;
+    const yearLabel = W < 500 ? "'" + String(d.year).slice(2) : d.year;
+    svg += `<text x="${x}" y="${H - padding.bottom + 18}" class="bar-label">${yearLabel}</text>`;
     svg += `</g>`;
   });
 
