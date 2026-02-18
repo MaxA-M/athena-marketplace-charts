@@ -355,35 +355,39 @@ function buildChart() {
 
   // MDP Labs Accelerator + New Marketplace Site - between 2016 (index 3) and 2017 (index 4)
   const mdpX = (xScale(3) + xScale(4)) / 2;
+  const mdpLabelY = padding.top + 16;
   svg += `<g class="annotation-group" data-overlay="mdp">`;
-  svg += `<line x1="${mdpX}" y1="${padding.top}" x2="${mdpX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-blue)"/>`;
-  svg += `<text x="${mdpX + 6}" y="${padding.top + 16}" class="annotation-label" style="fill: var(--accent-blue)">New Marketplace + MDP Labs</text>`;
-  svg += `<text x="${mdpX + 6}" y="${padding.top + 28}" class="annotation-badge" style="fill: var(--accent-blue); opacity: 0;">New Site Jan 2017</text>`;
-  svg += `<text x="${mdpX + 6}" y="${padding.top + 40}" class="annotation-badge" style="fill: var(--accent-blue); opacity: 0;">Accelerator May 2017</text>`;
+  svg += `<line x1="${mdpX}" y1="${mdpLabelY - 6}" x2="${mdpX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-blue)"/>`;
+  svg += `<text x="${mdpX + 6}" y="${mdpLabelY}" class="annotation-label" style="fill: var(--accent-blue)">New Marketplace + MDP Labs</text>`;
+  svg += `<text x="${mdpX + 6}" y="${mdpLabelY + 12}" class="annotation-badge" style="fill: var(--accent-blue); opacity: 0;">New Site Jan 2017</text>`;
+  svg += `<text x="${mdpX + 6}" y="${mdpLabelY + 24}" class="annotation-badge" style="fill: var(--accent-blue); opacity: 0;">Accelerator May 2017</text>`;
   svg += `</g>`;
 
   // COVID-19 Pandemic - between 2019 (index 6) and 2020 (index 7)
   const covidX = (xScale(6) + xScale(7)) / 2;
+  const covidLabelY = padding.top + 60;
   svg += `<g class="annotation-group" data-overlay="covid">`;
-  svg += `<line x1="${covidX}" y1="${padding.top}" x2="${covidX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-orange)"/>`;
-  svg += `<text x="${covidX + 6}" y="${padding.top + 16}" class="annotation-label" style="fill: var(--accent-orange)">COVID-19</text>`;
-  svg += `<text x="${covidX + 6}" y="${padding.top + 28}" class="annotation-badge" style="fill: var(--accent-orange); opacity: 0;">Mar 2020</text>`;
+  svg += `<line x1="${covidX}" y1="${covidLabelY - 6}" x2="${covidX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-orange)"/>`;
+  svg += `<text x="${covidX + 6}" y="${covidLabelY}" class="annotation-label" style="fill: var(--accent-orange)">COVID-19</text>`;
+  svg += `<text x="${covidX + 6}" y="${covidLabelY + 12}" class="annotation-badge" style="fill: var(--accent-orange); opacity: 0;">Mar 2020</text>`;
   svg += `</g>`;
 
   // 21st Century Cures Rule - between 2020 (index 7) and 2021 (index 8)
   const curesX = (xScale(7) + xScale(8)) / 2 + 10;
+  const curesLabelY = padding.top + 16;
   svg += `<g class="annotation-group" data-overlay="cures">`;
-  svg += `<line x1="${curesX}" y1="${padding.top}" x2="${curesX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-green)"/>`;
-  svg += `<text x="${curesX + 6}" y="${padding.top + 42}" class="annotation-label" style="fill: var(--accent-green)">Cures Rule</text>`;
-  svg += `<text x="${curesX + 6}" y="${padding.top + 54}" class="annotation-badge" style="fill: var(--accent-green); opacity: 0;">Apr 2021</text>`;
+  svg += `<line x1="${curesX}" y1="${curesLabelY - 6}" x2="${curesX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-green)"/>`;
+  svg += `<text x="${curesX + 6}" y="${curesLabelY}" class="annotation-label" style="fill: var(--accent-green)">Cures Rule</text>`;
+  svg += `<text x="${curesX + 6}" y="${curesLabelY + 12}" class="annotation-badge" style="fill: var(--accent-green); opacity: 0;">Apr 2021</text>`;
   svg += `</g>`;
 
   // ChatGPT - between 2022 (index 9) and 2023 (index 10)
   const gptX = (xScale(9) + xScale(10)) / 2;
+  const gptLabelY = padding.top + 60;
   svg += `<g class="annotation-group" data-overlay="chatgpt">`;
-  svg += `<line x1="${gptX}" y1="${padding.top}" x2="${gptX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-purple)"/>`;
-  svg += `<text x="${gptX + 6}" y="${padding.top + 16}" class="annotation-label" style="fill: var(--accent-purple)">ChatGPT</text>`;
-  svg += `<text x="${gptX + 6}" y="${padding.top + 28}" class="annotation-badge" style="fill: var(--accent-purple); opacity: 0;">Nov 2022</text>`;
+  svg += `<line x1="${gptX}" y1="${gptLabelY - 6}" x2="${gptX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-purple)"/>`;
+  svg += `<text x="${gptX + 6}" y="${gptLabelY}" class="annotation-label" style="fill: var(--accent-purple)">ChatGPT</text>`;
+  svg += `<text x="${gptX + 6}" y="${gptLabelY + 12}" class="annotation-badge" style="fill: var(--accent-purple); opacity: 0;">Nov 2022</text>`;
   svg += `</g>`;
 
   svg += `</svg>`;
