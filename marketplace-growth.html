@@ -369,7 +369,7 @@ function buildChart() {
 
   // COVID-19 Pandemic - between 2019 (index 6) and 2020 (index 7)
   const covidX = (xScale(6) + xScale(7)) / 2;
-  const covidLabelY = padding.top + 60;
+  const covidLabelY = padding.top + 50;
   svg += `<g class="annotation-group" data-overlay="covid">`;
   svg += `<line x1="${covidX}" y1="${covidLabelY - 6}" x2="${covidX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-orange)"/>`;
   svg += `<text x="${covidX + 6}" y="${covidLabelY}" class="annotation-label" style="fill: var(--accent-orange)">COVID-19</text>`;
@@ -378,7 +378,7 @@ function buildChart() {
 
   // 21st Century Cures Rule - between 2020 (index 7) and 2021 (index 8)
   const curesX = (xScale(7) + xScale(8)) / 2 + 10;
-  const curesLabelY = padding.top + 16;
+  const curesLabelY = padding.top + 84;
   svg += `<g class="annotation-group" data-overlay="cures">`;
   svg += `<line x1="${curesX}" y1="${curesLabelY - 6}" x2="${curesX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-green)"/>`;
   svg += `<text x="${curesX + 6}" y="${curesLabelY}" class="annotation-label" style="fill: var(--accent-green)">Cures Rule</text>`;
@@ -387,7 +387,7 @@ function buildChart() {
 
   // ChatGPT - between 2022 (index 9) and 2023 (index 10)
   const gptX = (xScale(9) + xScale(10)) / 2;
-  const gptLabelY = padding.top + 60;
+  const gptLabelY = padding.top + 118;
   svg += `<g class="annotation-group" data-overlay="chatgpt">`;
   svg += `<line x1="${gptX}" y1="${gptLabelY - 6}" x2="${gptX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-purple)"/>`;
   svg += `<text x="${gptX + 6}" y="${gptLabelY}" class="annotation-label" style="fill: var(--accent-purple)">ChatGPT</text>`;
