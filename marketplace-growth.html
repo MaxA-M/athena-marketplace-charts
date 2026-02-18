@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>athenahealth Marketplace Growth</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e8e9ed;
+    --text-muted: #8b8fa3;
+    --accent-blue: #4a9eff;
+    --accent-green: #34d399;
+    --accent-orange: #f59e0b;
+    --accent-purple: #a78bfa;
+    --bar-default: #3b5998;
+    --bar-hover: #4a9eff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .toggle-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .toggle-btn:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+  }
+
+  .toggle-btn.active {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(74, 158, 255, 0.08);
+  }
+
+  .toggle-btn .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .chart-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chart-area {
+    position: relative;
+    height: 420px;
+    margin-top: 0.5rem;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .bar {
+    fill: var(--bar-default);
+    cursor: pointer;
+    transition: fill 0.15s ease;
+  }
+
+  .bar:hover {
+    fill: var(--bar-hover);
+  }
+
+  .bar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    fill: var(--text-muted);
+    text-anchor: middle;
+  }
+
+  .bar-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    fill: var(--text);
+    text-anchor: middle;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .bar-group:hover .bar-value {
+    opacity: 1;
+  }
+
+  .y-axis-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    fill: var(--text-muted);
+    text-anchor: end;
+  }
+
+  .grid-line {
+    stroke: var(--border);
+    stroke-width: 0.5;
+    stroke-dasharray: 3, 4;
+  }
+
+  .annotation-line {
+    stroke-width: 1.5;
+    stroke-dasharray: 6, 3;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .annotation-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .annotation-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .annotation-visible .annotation-line,
+  .annotation-visible .annotation-label,
+  .annotation-visible .annotation-badge {
+    opacity: 1;
+  }
+
+  .trend-line {
+    fill: none;
+    stroke: var(--accent-green);
+    stroke-width: 2;
+    stroke-dasharray: 6, 4;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .trend-visible .trend-line {
+    opacity: 0.7;
+  }
+
+  .footnote {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+
+  .footnote a {
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    h1 { font-size: 1.3rem; }
+    .chart-area { height: 320px; }
+    .stat-row { gap: 0.75rem; }
+    .stat { padding: 0.75rem; }
+    .stat-value { font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>athenahealth Marketplace Partner Growth</h1>
+  <p class="subtitle">New partners joining the marketplace by year, 2013 &ndash; 2025</p>
+
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-value">500+</div>
+      <div class="stat-label">Active marketplace partners today</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">~50%</div>
+      <div class="stat-label">Joined since ChatGPT launched</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="toggle-btn" data-overlay="mdp" onclick="toggleOverlay('mdp')">
+      <span class="dot" style="background: var(--accent-blue)"></span>
+      New Marketplace Website + MDP Labs Accelerator (2017)
+    </button>
+    <button class="toggle-btn" data-overlay="covid" onclick="toggleOverlay('covid')">
+      <span class="dot" style="background: var(--accent-orange)"></span>
+      COVID-19 Pandemic (Mar 2020)
+    </button>
+    <button class="toggle-btn" data-overlay="cures" onclick="toggleOverlay('cures')">
+      <span class="dot" style="background: var(--accent-green)"></span>
+      21st Century Cures Rule (Apr 2021)
+    </button>
+    <button class="toggle-btn" data-overlay="chatgpt" onclick="toggleOverlay('chatgpt')">
+      <span class="dot" style="background: var(--accent-purple)"></span>
+      ChatGPT Launch (Nov 2022)
+    </button>
+  </div>
+
+  <div class="chart-wrapper">
+    <div class="chart-area" id="chartArea"></div>
+  </div>
+
+  <p class="footnote">
+    Go-live dates based on marketplace listing data, earliest reviews, and estimates.
+    <br>Data collected and maintained by <a href="https://alsgaardmiller.com">Alsgaard-Miller LLC</a>.
+  </p>
+</div>
+
+<script>
+const data = [
+  { year: 2013, count: 6 },
+  { year: 2014, count: 8 },
+  { year: 2015, count: 5 },
+  { year: 2016, count: 9 },
+  { year: 2017, count: 18 },
+  { year: 2018, count: 28 },
+  { year: 2019, count: 34 },
+  { year: 2020, count: 43 },
+  { year: 2021, count: 45 },
+  { year: 2022, count: 46 },
+  { year: 2023, count: 60 },
+  { year: 2024, count: 72 },
+  { year: 2025, count: 128 }
+];
+
+const chartArea = document.getElementById('chartArea');
+const padding = { top: 30, right: 20, bottom: 40, left: 45 };
+
+function buildChart() {
+  const rect = chartArea.getBoundingClientRect();
+  const W = rect.width;
+  const H = rect.height;
+  const chartW = W - padding.left - padding.right;
+  const chartH = H - padding.top - padding.bottom;
+
+  const maxVal = Math.max(...data.map(d => d.count));
+  const yMax = Math.ceil(maxVal / 20) * 20 + 10;
+
+  const barGap = chartW / data.length;
+  const barWidth = barGap * 0.55;
+
+  const xScale = (i) => padding.left + barGap * i + barGap / 2;
+  const yScale = (v) => padding.top + chartH * (1 - v / yMax);
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Y-axis title
+  svg += `<text x="12" y="${padding.top + chartH / 2}" class="y-axis-label" transform="rotate(-90, 12, ${padding.top + chartH / 2})" style="text-anchor: middle; font-family: 'DM Sans', sans-serif; font-size: 11px;">Companies joining the marketplace</text>`;
+
+  // Grid lines
+  for (let v = 0; v <= yMax; v += 20) {
+    const y = yScale(v);
+    svg += `<line x1="${padding.left}" y1="${y}" x2="${W - padding.right}" y2="${y}" class="grid-line"/>`;
+    svg += `<text x="${padding.left - 8}" y="${y + 3}" class="y-axis-label">${v}</text>`;
+  }
+
+  // Bars
+  data.forEach((d, i) => {
+    const x = xScale(i);
+    const barH = chartH * (d.count / yMax);
+    const y = yScale(d.count);
+
+    svg += `<g class="bar-group">`;
+    svg += `<rect x="${x - barWidth/2}" y="${y}" width="${barWidth}" height="${barH}" class="bar" rx="3"/>`;
+    svg += `<text x="${x}" y="${y - 6}" class="bar-value">${d.count}</text>`;
+    svg += `<text x="${x}" y="${H - padding.bottom + 18}" class="bar-label">${d.year}</text>`;
+    svg += `</g>`;
+  });
+
+  // MDP Labs Accelerator + New Marketplace Site - between 2016 (index 3) and 2017 (index 4)
+  const mdpX = (xScale(3) + xScale(4)) / 2;
+  svg += `<g class="annotation-group" data-overlay="mdp">`;
+  svg += `<line x1="${mdpX}" y1="${padding.top}" x2="${mdpX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-blue)"/>`;
+  svg += `<text x="${mdpX + 6}" y="${padding.top + 16}" class="annotation-label" style="fill: var(--accent-blue)">New Marketplace + MDP Labs</text>`;
+  svg += `<text x="${mdpX + 6}" y="${padding.top + 28}" class="annotation-badge" style="fill: var(--accent-blue); opacity: 0;">New Site Jan 2017</text>`;
+  svg += `<text x="${mdpX + 6}" y="${padding.top + 40}" class="annotation-badge" style="fill: var(--accent-blue); opacity: 0;">Accelerator May 2017</text>`;
+  svg += `</g>`;
+
+  // COVID-19 Pandemic - between 2019 (index 6) and 2020 (index 7)
+  const covidX = (xScale(6) + xScale(7)) / 2;
+  svg += `<g class="annotation-group" data-overlay="covid">`;
+  svg += `<line x1="${covidX}" y1="${padding.top}" x2="${covidX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-orange)"/>`;
+  svg += `<text x="${covidX + 6}" y="${padding.top + 16}" class="annotation-label" style="fill: var(--accent-orange)">COVID-19</text>`;
+  svg += `<text x="${covidX + 6}" y="${padding.top + 28}" class="annotation-badge" style="fill: var(--accent-orange); opacity: 0;">Mar 2020</text>`;
+  svg += `</g>`;
+
+  // 21st Century Cures Rule - between 2020 (index 7) and 2021 (index 8)
+  const curesX = (xScale(7) + xScale(8)) / 2 + 10;
+  svg += `<g class="annotation-group" data-overlay="cures">`;
+  svg += `<line x1="${curesX}" y1="${padding.top}" x2="${curesX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-green)"/>`;
+  svg += `<text x="${curesX + 6}" y="${padding.top + 42}" class="annotation-label" style="fill: var(--accent-green)">Cures Rule</text>`;
+  svg += `<text x="${curesX + 6}" y="${padding.top + 54}" class="annotation-badge" style="fill: var(--accent-green); opacity: 0;">Apr 2021</text>`;
+  svg += `</g>`;
+
+  // ChatGPT - between 2022 (index 9) and 2023 (index 10)
+  const gptX = (xScale(9) + xScale(10)) / 2;
+  svg += `<g class="annotation-group" data-overlay="chatgpt">`;
+  svg += `<line x1="${gptX}" y1="${padding.top}" x2="${gptX}" y2="${yScale(0)}" class="annotation-line" style="stroke: var(--accent-purple)"/>`;
+  svg += `<text x="${gptX + 6}" y="${padding.top + 16}" class="annotation-label" style="fill: var(--accent-purple)">ChatGPT</text>`;
+  svg += `<text x="${gptX + 6}" y="${padding.top + 28}" class="annotation-badge" style="fill: var(--accent-purple); opacity: 0;">Nov 2022</text>`;
+  svg += `</g>`;
+
+  svg += `</svg>`;
+  chartArea.innerHTML = svg;
+}
+
+const activeOverlays = new Set();
+
+function toggleOverlay(name) {
+  const btn = document.querySelector(`button[data-overlay="${name}"]`);
+  if (activeOverlays.has(name)) {
+    activeOverlays.delete(name);
+    btn.classList.remove('active');
+  } else {
+    activeOverlays.add(name);
+    btn.classList.add('active');
+  }
+
+  document.querySelectorAll('.annotation-group').forEach(g => {
+    const overlay = g.getAttribute('data-overlay');
+    if (activeOverlays.has(overlay)) {
+      g.classList.add('annotation-visible', 'trend-visible');
+    } else {
+      g.classList.remove('annotation-visible', 'trend-visible');
+    }
+  });
+}
+
+buildChart();
+window.addEventListener('resize', buildChart);
+</script>
+</body>
+</html>
