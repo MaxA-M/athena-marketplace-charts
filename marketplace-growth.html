@@ -257,8 +257,8 @@
 
   <div class="stat-row">
     <div class="stat">
-      <div class="stat-value">500+</div>
-      <div class="stat-label">Active marketplace partners today</div>
+      <div class="stat-value">502</div>
+      <div class="stat-label">Active marketplace partners as of end of 2025</div>
     </div>
     <div class="stat">
       <div class="stat-value">~50%</div>
@@ -334,7 +334,7 @@ function buildChart() {
   let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
 
   // Y-axis title
-  svg += `<text x="12" y="${padding.top + chartH / 2}" class="y-axis-label" transform="rotate(-90, 12, ${padding.top + chartH / 2})" style="text-anchor: middle; font-family: 'DM Sans', sans-serif; font-size: 11px;">Companies joining the marketplace</text>`;
+  svg += `<text x="12" y="${padding.top + chartH / 2}" class="y-axis-label" transform="rotate(-90, 12, ${padding.top + chartH / 2})" style="text-anchor: middle; font-family: 'DM Sans', sans-serif; font-size: 14px;">Companies joining the marketplace</text>`;
 
   // Grid lines
   for (let v = 0; v <= yMax; v += 20) {
