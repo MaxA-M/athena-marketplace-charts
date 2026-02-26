@@ -298,7 +298,15 @@ function buildChart() {
   chartArea.innerHTML = svg;
 }
 
-buildChart();
+function initChart() {
+  const rect = document.getElementById('chartArea').getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) {
+    setTimeout(initChart, 100);
+    return;
+  }
+  buildChart();
+}
+initChart();
 </script>
 </body>
 </html>
