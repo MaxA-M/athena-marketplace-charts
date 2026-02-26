@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Messaging Partners</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0f1117;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  .card {
+    width: 1200px;
+    height: 628px;
+    background: #1a1d27;
+    border-radius: 0;
+    padding: 36px 44px 28px 44px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e8e9ed;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    max-width: 1100px;
+  }
+  h1 .num {
+    color: #e8a840;
+    font-family: 'DM Mono', monospace;
+  }
+  .chart-area {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+  .grid-line {
+    stroke: #2a2d3a;
+    stroke-width: 0.5;
+    stroke-dasharray: 3, 4;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .footnote {
+    font-size: 10px;
+    color: #555869;
+  }
+  .attribution {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8b8fa3;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top-row">
+    <h1>Of the <span class="num">17</span> athena partners offering 2-way texting, the <span class="num">7</span> who joined before 2020 have the most customers. Every partner who joined after has fewer than <span class="num">50</span>.</h1>
+  </div>
+
+  <div class="chart-area" id="chartArea"></div>
+
+  <div class="footer">
+    <span class="footnote">Customer counts are ranges based on marketplace listing data as of January 2026.</span>
+    <span class="attribution">Data collected and maintained by <strong>Alsgaard-Miller LLC</strong></span>
+  </div>
+</div>
+
+<script>
+const colors = {
+  '0-10':    '#c2dcf5',
+  '11-25':   '#7db5e8',
+  '26-50':   '#4a90d4',
+  '51-100':  '#2567a8',
+  '101-250': '#133d6b',
+};
+
+const legendItems = [
+  { range: '0-10 customers', color: '#c2dcf5' },
+  { range: '11-25 customers', color: '#7db5e8' },
+  { range: '26-50 customers', color: '#4a90d4' },
+  { range: '51-100 customers', color: '#2567a8' },
+  { range: '101-250 customers', color: '#133d6b' },
+];
+
+const data = [
+  { year: 2017, partners: [
+    { range: '101-250', name: 'OhMD' },
+    { range: '101-250', name: 'Solutionreach' },
+    { range: '26-50', name: 'Artera' },
+  ]},
+  { year: 2018, partners: [
+    { range: '51-100', name: 'Podium' },
+  ]},
+  { year: 2019, partners: [
+    { range: '26-50', name: 'Klara' },
+    { range: '11-25', name: 'Vital Interaction' },
+    { range: '0-10', name: 'Rhinogram' },
+  ]},
+  { year: 2020, partners: [
+    { range: '101-250', name: 'Relatient' },
+    { range: '11-25', name: 'Televox' },
+  ]},
+  { year: 2021, partners: [
+    { range: '26-50', name: 'Curogram' },
+    { range: '0-10', name: 'InteliChart' },
+  ]},
+  { year: 2022, partners: [
+    { range: '11-25', name: 'Emitrr' },
+    { range: '0-10', name: 'mConsent' },
+  ]},
+  { year: 2023, partners: [
+    { range: '26-50', name: 'CareMessage' },
+  ]},
+  { year: 2024, partners: [
+    { range: '11-25', name: 'Healthtalk A.I.' },
+    { range: '0-10', name: 'Imperium Health Cloud' },
+  ]},
+  { year: 2025, partners: [
+    { range: '26-50', name: 'Spruce Health' },
+  ]},
+];
+
+const chartArea = document.getElementById('chartArea');
+const padding = { top: 16, right: 20, bottom: 32, left: 65 };
+
+function buildChart() {
+  const rect = chartArea.getBoundingClientRect();
+  const W = rect.width;
+  const H = rect.height;
+  const chartW = W - padding.left - padding.right;
+  const chartH = H - padding.top - padding.bottom;
+  const yMax = 4;
+
+  const barGap = chartW / data.length;
+  const barWidth = barGap * 0.6;
+  const blockGap = 2;
+
+  const xScale = (i) => padding.left + barGap * i + barGap / 2;
+  const yScale = (v) => padding.top + chartH * (1 - v / yMax);
+  const unitH = chartH / yMax;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Y-axis title
+  const yAxisMid = padding.top + chartH * 0.45;
+  svg += `<text x="14" y="${yAxisMid}" style="font-family: 'DM Mono', monospace; font-size: 11px; fill: #8b8fa3;" text-anchor="middle" transform="rotate(-90, 14, ${yAxisMid})">Number of Partners</text>`;
+
+  // Grid lines
+  for (let v = 0; v <= yMax; v += 1) {
+    const y = yScale(v);
+    svg += `<line x1="${padding.left}" y1="${y}" x2="${W - padding.right}" y2="${y}" class="grid-line"/>`;
+    svg += `<text x="${padding.left - 8}" y="${y + 3}" style="font-family: 'DM Mono', monospace; font-size: 10px; fill: #8b8fa3; text-anchor: end;">${v}</text>`;
+  }
+
+  // Legend box - upper right
+  const legendW = 145;
+  const legendLineH = 18;
+  const legendH = legendItems.length * legendLineH + 16;
+  const legendX = W - padding.right - legendW - 8;
+  const legendY = padding.top + 8;
+
+  svg += `<rect x="${legendX}" y="${legendY}" width="${legendW}" height="${legendH}" fill="#1a1d27" stroke="#2a2d3a" stroke-width="1" rx="4"/>`;
+  svg += `<text x="${legendX + 10}" y="${legendY + 14}" style="font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700; fill: #8b8fa3;">athena Customer Range</text>`;
+
+  legendItems.forEach((item, idx) => {
+    const itemY = legendY + 26 + idx * legendLineH;
+    svg += `<rect x="${legendX + 10}" y="${itemY - 7}" width="10" height="10" fill="${item.color}" rx="2"/>`;
+    svg += `<text x="${legendX + 26}" y="${itemY + 2}" style="font-family: 'DM Sans', sans-serif; font-size: 10px; fill: #8b8fa3;">${item.range}</text>`;
+  });
+
+  // Stacked individual blocks
+  data.forEach((d, i) => {
+    const x = xScale(i);
+    const total = d.partners.length;
+
+    // Year label
+    svg += `<text x="${x}" y="${H - padding.bottom + 16}" style="font-family: 'DM Mono', monospace; font-size: 12px; fill: #8b8fa3; text-anchor: middle;">${d.year}</text>`;
+
+    if (total === 0) return;
+
+    let blockIndex = 0;
+    d.partners.forEach((partner) => {
+      const blockY = yScale(0) - (blockIndex + 1) * unitH + blockGap / 2;
+      const blockH = unitH - blockGap;
+      const color = colors[partner.range];
+      svg += `<rect x="${x - barWidth/2}" y="${blockY}" width="${barWidth}" height="${blockH}" fill="${color}" rx="3"/>`;
+      blockIndex++;
+    });
+
+    // Total value on top
+    const topY = yScale(0) - total * unitH;
+    svg += `<text x="${x}" y="${topY - 6}" style="font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; fill: #e8e9ed; text-anchor: middle;">${total}</text>`;
+  });
+
+  svg += `</svg>`;
+  chartArea.innerHTML = svg;
+}
+
+buildChart();
+</script>
+</body>
+</html>
