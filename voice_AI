@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice AI Partners - Customer Distribution</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0f1117;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  .card {
+    width: 1200px;
+    height: 628px;
+    background: #1a1d27;
+    border-radius: 0;
+    padding: 36px 44px 28px 44px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e8e9ed;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    max-width: 1100px;
+  }
+  h1 .num {
+    color: #e8a840;
+    font-family: 'DM Mono', monospace;
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .stat {
+    background: rgba(74, 158, 255, 0.08);
+    border: 1px solid #2a2d3a;
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: center;
+  }
+  .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    color: #4a9eff;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: #8b8fa3;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+  .chart-area {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+  .bar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    fill: #8b8fa3;
+    text-anchor: middle;
+  }
+  .bar-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    fill: #e8e9ed;
+    text-anchor: middle;
+  }
+  .y-axis-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    fill: #8b8fa3;
+    text-anchor: end;
+  }
+  .grid-line {
+    stroke: #2a2d3a;
+    stroke-width: 0.5;
+    stroke-dasharray: 3, 4;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .footnote {
+    font-size: 10px;
+    color: #555869;
+  }
+  .attribution {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8b8fa3;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top-row">
+    <h1>Of the <span class="num">38</span> athena marketplace partners offering voice AI, <span class="num">23</span> have &lt;10 customers and <span class="num">28</span> joined in the last two years.</h1>
+  </div>
+
+  <div class="chart-area" id="chartArea"></div>
+
+  <div class="footer">
+    <span class="footnote">Customer counts are ranges based on marketplace listing data as of January 2026.</span>
+    <span class="attribution">Data collected and maintained by <strong>Alsgaard-Miller LLC</strong></span>
+  </div>
+</div>
+
+<script>
+const colors = {
+  '0-10':    '#c2dcf5',
+  '11-25':   '#9cc5ed',
+  '26-50':   '#6eaae0',
+  '51-100':  '#4a90d4',
+  '101-250': '#2d6fb5',
+  '251-500': '#1a4f8a',
+  '500+':    '#0e3260',
+};
+
+const legendItems = [
+  { range: '0-10 customers', color: '#c2dcf5' },
+  { range: '11-25 customers', color: '#9cc5ed' },
+  { range: '26-50 customers', color: '#6eaae0' },
+  { range: '51-100 customers', color: '#4a90d4' },
+  { range: '101-250 customers', color: '#2d6fb5' },
+  { range: '251-500 customers', color: '#1a4f8a' },
+  { range: '500+ customers', color: '#0e3260' },
+];
+
+// All years from 2014 to 2026
+const data = [
+  { year: 2014, partners: [
+    { range: '500+', name: 'Phreesia' },
+  ]},
+  { year: 2015, partners: [] },
+  { year: 2016, partners: [] },
+  { year: 2017, partners: [
+    { range: '251-500', name: 'Zocdoc' },
+    { range: '101-250', name: 'Relatient' },
+    { range: '101-250', name: 'OhMD' },
+    { range: '26-50', name: 'CallMyDoc' },
+    { range: '11-25', name: 'Artera' },
+  ]},
+  { year: 2018, partners: [] },
+  { year: 2019, partners: [] },
+  { year: 2020, partners: [
+    { range: '26-50', name: 'Health Note' },
+    { range: '26-50', name: 'Holly by Nimblr' },
+  ]},
+  { year: 2021, partners: [
+    { range: '0-10', name: 'ThinkAndor' },
+  ]},
+  { year: 2022, partners: [] },
+  { year: 2023, partners: [
+    { range: '0-10', name: 'Talkdesk' },
+  ]},
+  { year: 2024, partners: [
+    { range: '26-50', name: 'Assort Health' },
+    { range: '11-25', name: 'Talkie.ai' },
+    { range: '0-10', name: 'Helio' },
+    { range: '0-10', name: 'Parlance IVA' },
+    { range: '0-10', name: 'Wendi' },
+  ]},
+  { year: 2025, partners: [
+    { range: '51-100', name: 'healow Genie' },
+    { range: '26-50', name: 'EliseAI' },
+    { range: '11-25', name: 'Insight Health' },
+    { range: '11-25', name: 'Pretty Good AI' },
+    { range: '11-25', name: 'Transform9' },
+    { range: '0-10', name: 'Aidion Health' },
+    { range: '0-10', name: 'Flip' },
+    { range: '0-10', name: 'Hando AI' },
+    { range: '0-10', name: 'IntelePeer' },
+    { range: '0-10', name: 'Kouper' },
+    { range: '0-10', name: 'Linear Health' },
+    { range: '0-10', name: 'Newton Health' },
+    { range: '0-10', name: 'Parakeet Health' },
+    { range: '0-10', name: 'Quadrant Health' },
+    { range: '0-10', name: 'RevelAi Health' },
+    { range: '0-10', name: 'SENA AI' },
+    { range: '0-10', name: 'VoiceAssist Labs' },
+    { range: '0-10', name: 'Voiceoc' },
+    { range: '0-10', name: 'Voxology AI' },
+    { range: '0-10', name: 'mdhub AI' },
+  ]},
+  { year: 2026, partners: [
+    { range: '0-10', name: 'Hyro' },
+    { range: '0-10', name: 'Paratus Health' },
+    { range: '0-10', name: 'VoiceCare AI' },
+  ]},
+];
+
+const chartArea = document.getElementById('chartArea');
+const padding = { top: 16, right: 20, bottom: 32, left: 65 };
+
+function buildChart() {
+  const rect = chartArea.getBoundingClientRect();
+  const W = rect.width;
+  const H = rect.height;
+  const chartW = W - padding.left - padding.right;
+  const chartH = H - padding.top - padding.bottom;
+  const yMax = 22;
+
+  const barGap = chartW / data.length;
+  const barWidth = barGap * 0.7;
+  const blockGap = 1.5;
+
+  const xScale = (i) => padding.left + barGap * i + barGap / 2;
+  const yScale = (v) => padding.top + chartH * (1 - v / yMax);
+  const unitH = chartH / yMax;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Y-axis title
+  const yAxisMid = padding.top + chartH * 0.45;
+  svg += `<text x="14" y="${yAxisMid}" class="y-axis-label" text-anchor="middle" transform="rotate(-90, 14, ${yAxisMid})" style="font-size: 11px;">Number of Partners</text>`;
+
+  // Grid lines
+  for (let v = 0; v <= yMax; v += 2) {
+    const y = yScale(v);
+    svg += `<line x1="${padding.left}" y1="${y}" x2="${W - padding.right}" y2="${y}" class="grid-line"/>`;
+    if (v % 4 === 0) {
+      svg += `<text x="${padding.left - 8}" y="${y + 3}" class="y-axis-label">${v}</text>`;
+    }
+  }
+
+  // Legend box - positioned in upper left above the early years
+  const legendX = padding.left + 8;
+  const legendY = padding.top + 8;
+  const legendW = 145;
+  const legendH = legendItems.length * 18 + 16;
+
+  svg += `<rect x="${legendX}" y="${legendY}" width="${legendW}" height="${legendH}" fill="#1a1d27" stroke="#2a2d3a" stroke-width="1" rx="4"/>`;
+
+  // Legend title
+  svg += `<text x="${legendX + 10}" y="${legendY + 14}" style="font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700; fill: #8b8fa3;">athena Customer Range</text>`;
+
+  legendItems.forEach((item, idx) => {
+    const itemY = legendY + 26 + idx * 18;
+    svg += `<rect x="${legendX + 10}" y="${itemY - 7}" width="10" height="10" fill="${item.color}" rx="2"/>`;
+    svg += `<text x="${legendX + 26}" y="${itemY + 2}" style="font-family: 'DM Sans', sans-serif; font-size: 10px; fill: #8b8fa3;">${item.range}</text>`;
+  });
+
+  // Stacked individual blocks
+  data.forEach((d, i) => {
+    const x = xScale(i);
+    const total = d.partners.length;
+
+    // Year label - always show
+    const yearLabel = d.year === 2026 ? "'26\nYTD" : "'" + String(d.year).slice(2);
+    svg += `<text x="${x}" y="${H - padding.bottom + 16}" class="bar-label">${yearLabel}</text>`;
+
+    if (total === 0) return;
+
+    let blockIndex = 0;
+    d.partners.forEach((partner) => {
+      const blockY = yScale(0) - (blockIndex + 1) * unitH + blockGap / 2;
+      const blockH = unitH - blockGap;
+      const color = colors[partner.range];
+
+      svg += `<rect x="${x - barWidth/2}" y="${blockY}" width="${barWidth}" height="${blockH}" fill="${color}" rx="2"/>`;
+      blockIndex++;
+    });
+
+    // Total value on top
+    const topY = yScale(0) - total * unitH;
+    svg += `<text x="${x}" y="${topY - 6}" class="bar-value">${total}</text>`;
+  });
+
+  svg += `</svg>`;
+  chartArea.innerHTML = svg;
+}
+
+buildChart();
+</script>
+</body>
+</html>
